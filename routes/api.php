@@ -7,6 +7,7 @@ use App\Http\Controllers\HeloController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +24,20 @@ Route::resource('halo', HeloController::class);
 Route::resource('/siswa', SiswaController::class);
 Route::resource('/books', BookController::class);
 Route::resource('/author', AuthorController::class);
+
+//public route
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::get('/books', [BookController::class, 'index']);
+Route::get('/Books/{id}', [BookController::class, 'show']);
+Route::get('/Authors', [BookController::class, 'index']);
+Route::get('/Authors/{id}', [BookController::class, 'show']);
+
+//protected routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('books', BookController::class)->except('create', 'edit', 'show', 'index');
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::resource('authors', AuthController::class)->except('create', 'edit', 'show', 'index');
+
+});
